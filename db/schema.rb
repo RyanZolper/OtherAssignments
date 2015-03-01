@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20150226163553) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "companies", force: :cascade do |t|
     t.string   "name"
     t.string   "country"
@@ -28,18 +31,18 @@ ActiveRecord::Schema.define(version: 20150226163553) do
     t.integer  "model_id"
   end
 
-  add_index "configurations", ["model_id"], name: "index_configurations_on_model_id"
+  add_index "configurations", ["model_id"], name: "index_configurations_on_model_id", using: :btree
 
   create_table "models", force: :cascade do |t|
     t.string   "name"
     t.string   "start_price"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.integer  "car_id"
     t.integer  "company_id"
   end
 
-  add_index "models", ["car_id"], name: "index_models_on_car_id"
-  add_index "models", ["company_id"], name: "index_models_on_company_id"
+  add_index "models", ["company_id"], name: "index_models_on_company_id", using: :btree
 
+  add_foreign_key "configurations", "models"
+  add_foreign_key "models", "companies"
 end
